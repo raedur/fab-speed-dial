@@ -23,6 +23,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.design.internal.NavigationMenu;
@@ -113,7 +114,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
 
     private int menuId;
     private int fabGravity;
-    private Drawable fabDrawable;
+    private @DrawableRes int fabDrawableId;
     private ColorStateList fabDrawableTint;
     private ColorStateList fabBackgroundTint;
     private ColorStateList miniFabDrawableTint;
@@ -123,7 +124,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     private boolean miniFabTitlesEnabled;
     private int miniFabTitleTextColor;
     private int[] miniFabTitleTextColorArray;
-    private Drawable touchGuardDrawable;
+    private @DrawableRes int touchGuardDrawableId;
     private boolean useTouchGuard;
 
     private boolean isAnimating;
@@ -188,9 +189,9 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
     }
 
     private void resolveOptionalAttributes(TypedArray typedArray) {
-        fabDrawable = typedArray.getDrawable(R.styleable.FabSpeedDial_fabDrawable);
-        if (fabDrawable == null) {
-            fabDrawable = ContextCompat.getDrawable(getContext(), R.drawable.fab_add_clear_selector);
+        fabDrawableId = typedArray.getResourceId(R.styleable.FabSpeedDial_fabDrawable, 0);
+        if (fabDrawableId == 0) {
+            fabDrawableId = R.drawable.fab_add_clear_selector;
         }
 
         fabDrawableTint = typedArray.getColorStateList(R.styleable.FabSpeedDial_fabDrawableTint);
@@ -243,7 +244,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
             miniFabTitleTextColorTa.recycle();
         }
 
-        touchGuardDrawable = typedArray.getDrawable(R.styleable.FabSpeedDial_touchGuardDrawable);
+        touchGuardDrawableId = typedArray.getResourceId(R.styleable.FabSpeedDial_touchGuardDrawable, 0);
 
         useTouchGuard = typedArray.getBoolean(R.styleable.FabSpeedDial_touchGuard, true);
     }
@@ -264,7 +265,7 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
 
         // Set up the client's FAB
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setImageDrawable(fabDrawable);
+        fab.setImageResource(fabDrawableId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             fab.setImageTintList(fabDrawableTint);
         }
@@ -296,12 +297,8 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
             touchGuard.setWillNotDraw(true);
             touchGuard.setVisibility(GONE);
 
-            if (touchGuardDrawable != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    touchGuard.setBackground(touchGuardDrawable);
-                } else {
-                    touchGuard.setBackgroundDrawable(touchGuardDrawable);
-                }
+            if (touchGuardDrawableId != 0) {
+                touchGuard.setBackgroundResource(touchGuardDrawableId);
             }
 
             if (parent instanceof FrameLayout) {
