@@ -266,6 +266,8 @@ public class FabSpeedDial extends LinearLayout implements View.OnClickListener {
         // Set up the client's FAB
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setImageResource(fabDrawableId);
+        // copy visibility of speed dial to fab
+        fab.setVisibility(getVisibility());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             fab.setImageTintList(fabDrawableTint);
         }
